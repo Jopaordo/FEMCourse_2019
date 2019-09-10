@@ -1,0 +1,62 @@
+# vtk DataFile Version 2.0
+tetrahedron, Created by Gmsh
+ASCII
+DATASET UNSTRUCTURED_GRID
+POINTS 4 double
+0 0 0
+1 0 0
+0 1 0
+0 0 1
+
+CELLS 15 47
+1 0
+1 1
+1 2
+1 3
+2 0 1
+2 1 2
+2 2 0
+2 0 3
+2 1 3
+2 2 3
+3 0 1 2
+3 0 1 3
+3 1 2 3
+3 0 3 2
+4 0 2 3 1
+
+CELL_TYPES 15
+1
+1
+1
+1
+3
+3
+3
+3
+3
+3
+5
+5
+5
+5
+10
+
+CELL_DATA 15
+FIELD FieldData 1
+Material 1 15 int
+1
+1
+1
+1
+3
+3
+3
+3
+3
+3
+5
+5
+5
+5
+10
