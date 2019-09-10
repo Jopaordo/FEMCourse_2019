@@ -50,86 +50,131 @@
 #include "pzshapetriang.h"
 #include "pzshapequad.h"
 
-void TestTriangleTransforms();
+void TestTriangleTransforms(TPZVec<double> vectorin);
+void TestQuadrilateralTransforms(TPZVec<double> vectorin);
+void TestPyramidTransforms(TPZVec<double> vectorin);
+void TestTetrahedronTransforms(TPZVec<double> vectorin);
+
 using namespace std;
 //typedef REAL RND_MAX;
 REAL RND_MAX = 4294967295.0;
 
 
 int main(){
-    
-  TestTriangleTransforms();
-    
-    
-//    pztopology::TPZQuadrilateral trian;
-//    double val = (((double) arc4random())/RND_MAX);
-//    TPZTransform<> tr = trian.SideToSideTransform(8, 6);
-//    TPZFMatrix<REAL> MULT = tr.Mult();
-//    TPZFMatrix<REAL> SUM =tr.Sum();
-//  //  TPZVec<double> vectorin(2,1/3);
-//    //vectorin[1]=0.3;
-//    TPZVec<double> vectorout(1);
-//    tr.Apply(vectorin, vectorout);
-//    std::cout<<vectorout[0]<<std::endl;
-//   // std::cout<<vectorout[1]<<std::endl;
-//    TPZVec<int64_t> id(4,0);
-//    id[0]=4;
-//    id[1]=3;
-//    id[2]=2;
-//    id[3]=1;
-//    int valret = trian.GetTransformId(8,id);
-//    TPZVec<int> permute(9,0);
-//    trian.GetGatherPermute(valret, permute);
-//
-//    for (int i=0; i<9; i++) {
-//        std::cout<<"id "<<i<<":"<<permute[i]<<std::endl;
-//    }
-//
-//
-//
-//    pzshape::TPZShapeQuad quad;
-//    REAL out;
-//    quad.ProjectPoint2dQuadToRib(2, vectorin, out);
-//
-//
-//
-//    TPZManVector<REAL> pt(3,0.0);
-//    quad.RandomPoint(pt);
-//    std::cout<<pt[0]<<std::endl;
-//    std::cout<<pt[1]<<std::endl;
-//    std::cout<<pt[2]<<std::endl;
+    TPZVec<double> vectorin(3,0.1);
+//  TestTriangleTransforms();
+//  TestQuadrilateralTransforms();
+    TestTetrahedronTransforms(vectorin);
     return 0;
 }
-void TestTriangleTransforms(){
+void TestTriangleTransforms(TPZVec<double> vectorin){
+    std::cout<<"************************ "<<std::endl;
+    std::cout<<"TransformElementToSide TEST->Triangle"<<std::endl;
+    std::cout<<"Parametric Domain 2D {xi,0,1}, {eta,0,1-xi} "<<std::endl;
+    std::cout<<"Parametric Domain 1D {xi,-1,1}"<<std::endl;
+    std::cout<<"************************ "<<std::endl;
+  
+    TPZVec<double> vectorout(1);
     
-    
-    int sidefrom=6;
-    int sideto=3;
-    
-    TPZVec<double> vectorin(2,1.0/3.0);
-   // vectorin[1]=0.3;
+    std::cout<<"Point to transform: "<<vectorin<<std::endl;
     
     pztopology::TPZTriangle trian;
-    TPZTransform<> tr = trian.SideToSideTransform(sidefrom, sideto);
-    TPZTransform<> trinv = trian.SideToSideTransform(sideto, sidefrom);
-
-    TPZFMatrix<REAL> mult = trinv.Mult();
-    TPZFMatrix<REAL> sum  = trinv.Sum();
+    int npoints = trian.NCornerNodes;
+    int nfaces = trian.NFaces;
+    for (int iside = npoints; iside<npoints + nfaces; iside++) {
+        TPZTransform<> transform = trian.TransformElementToSide(iside);
+        transform.Apply(vectorin, vectorout);
+        std::cout<<"TransformElementToSide("<<iside<<") = "<<vectorout<<std::endl;
+    }
     
-    mult.Print(std::cout);
-    sum.Print(std::cout);
-    
-    TPZVec<double> vectorout(1);
-    tr.Apply(vectorin, vectorout);
-    std::cout<<vectorout[0]<<std::endl;
-    
-    REAL val = (vectorout[0]+1.0)/2.0;
-    TPZVec<double> vectoroutinv(2);
-    TPZVec<double> vectorinInv(1,vectorout[0]);
-    trinv.Apply(vectorinInv, vectoroutinv);
-    vectoroutinv[1]=vectorin[1];
-    std::cout<<vectoroutinv[0]<<std::endl;
-    std::cout<<vectoroutinv[1]<<std::endl;
+ 
+    return;
     
     
 }
+void TestQuadrilateralTransforms(TPZVec<double> vectorin){
+    
+    std::cout<<"************************ "<<std::endl;
+    std::cout<<"TransformElementToSide TEST->Quadrilateral"<<std::endl;
+    std::cout<<"Parametric Domain 2D {xi,-1,1}, {eta,-1,1} "<<std::endl;
+    std::cout<<"Parametric Domain 1D {xi,-1,1}"<<std::endl;
+    std::cout<<"************************ "<<std::endl;
+  
+    TPZVec<double> vectorout(1);
+    
+    std::cout<<"Point to transform: "<<vectorin<<std::endl;
+    
+    pztopology::TPZQuadrilateral trian;
+    int npoints = trian.NCornerNodes;
+    int nfaces = trian.NFaces;
+    for (int iside = npoints; iside<npoints + nfaces; iside++) {
+        TPZTransform<> transform = trian.TransformElementToSide(iside);
+        transform.Apply(vectorin, vectorout);
+        std::cout<<"TransformElementToSide("<<iside<<") = "<<vectorout<<std::endl;
+    }
+    
+    
+    return;
+    
+}
+void TestPyramidTransforms(TPZVec<double> vectorin){
+    
+    std::cout<<"************************ "<<std::endl;
+    std::cout<<"TransformElementToSide TEST->Pyramid"<<std::endl;
+    std::cout<<"Parametric Domain 3D {xi,-1,1}, {eta,-1,1}, {zeta,0,1} "<<std::endl;
+    std::cout<<"Parametric Domain 2D {xi,-1,1}, {eta,-1,1} "<<std::endl;
+    std::cout<<"Parametric Domain 1D {xi,-1,1}"<<std::endl;
+    std::cout<<"************************ "<<std::endl;
+  
+    TPZVec<double> vectorout(1);
+    
+    std::cout<<"Point to transform: "<<vectorin<<std::endl;
+    
+    pztopology::TPZPyramid pyram;
+    int npoints = pyram.NCornerNodes;
+    int nfaces = pyram.NFaces;
+    int nribs =  pyram.NSides - npoints - nfaces -1;
+    for (int iside = npoints; iside<npoints + nfaces + nribs; iside++) {
+        if (iside > 12){
+            vectorout.resize(2);
+        }
+        TPZTransform<> transform = pyram.TransformElementToSide(iside);
+        transform.Apply(vectorin, vectorout);
+        std::cout<<"TransformElementToSide("<<iside<<") = "<<vectorout<<std::endl;
+    }
+    
+    
+    return;
+    
+}
+void TestTetrahedronTransforms(TPZVec<double> vectorin){
+    std::cout<<"************************ "<<std::endl;
+    std::cout<<"TransformElementToSide TEST->Hexahedra"<<std::endl;
+    std::cout<<"Parametric Domain 3D {xi,0,1}, {eta,0,1}, {zeta,0,1} "<<std::endl;
+    std::cout<<"Parametric Domain 2D {xi,-1,1}, {eta,-1,1} "<<std::endl;
+    std::cout<<"Parametric Domain 1D {xi,-1,1}"<<std::endl;
+    std::cout<<"************************ "<<std::endl;
+    
+    vectorin[1]=0.1;
+    TPZVec<double> vectorout(1);
+    
+    std::cout<<"Point to transform: "<<vectorin<<std::endl;
+    
+    pztopology::TPZTetrahedron tetra;
+    int npoints = tetra.NCornerNodes;
+    int nfaces = tetra.NFaces;
+    int nribs =  tetra.NSides - npoints - nfaces -1;
+    for (int iside = npoints; iside<npoints + nfaces + nribs; iside++) {
+        if (iside > 9){
+            vectorout.resize(2);
+        }
+        TPZTransform<> transform = tetra.TransformElementToSide(iside);
+        transform.Apply(vectorin, vectorout);
+        std::cout<<"TransformElementToSide("<<iside<<") = "<<vectorout<<std::endl;
+    }
+    
+    
+    return;
+}
+
+
