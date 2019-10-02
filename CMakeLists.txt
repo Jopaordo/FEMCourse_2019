@@ -104,5 +104,5 @@ endif()
 
 
 add_subdirectory(TopologyTest)
-
+add_subdirectory(ShapeTest)
 
